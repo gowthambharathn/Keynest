@@ -10,42 +10,12 @@
 * 💾 Efficient local data storage
 * 🛠️ Built for Android developers
 
-## Installation
-
-### Step 1: Add JitPack
-
-```kotlin
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
-}
-```
-
-### Step 2: Add the dependency
-
-```kotlin
-dependencies {
-    implementation("com.github.gowthambharathn:KeyNest:TAG")
-}
-```
-
-Replace `TAG` with the latest release version.
-
-## Quick Start
-
-```kotlin
-// Example usage
-// Documentation coming soon.
-```
 
 ## Requirements
 
 * Android API 24+
 * Kotlin
-* Jetpack Compose or XML
+* Jetpack Compose 
 
 ## License
 
