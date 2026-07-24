@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.dp
 import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
 import infinity.developers.coreutils.Ui.Nova.Components.Button.NovaWhiteButton
 import infinity.developers.coreutils.Ui.Nova.Components.Card.NovaWhiteCard
+import infinity.developers.coreutils.Ui.Nova.Components.Slider.NovaWhiteSlider
 import infinity.developers.coreutils.Ui.Nova.Components.TextField.NovaWhiteTextField
+import infinity.developers.coreutils.Ui.Nova.Components.Toggle.NovaWhiteToggle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,14 +69,7 @@ fun CreatePasswordScreen(
                     text = "Generate Password",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = brandColor,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Configure custom length and complexity guidelines to instantly build secure credentials.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = neutralTextAlpha,
+                    color = Color(0xFFFFFFFF),
                     textAlign = TextAlign.Center
                 )
             }
@@ -103,41 +98,13 @@ fun CreatePasswordScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = brandColor
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Difficulty.entries.forEach { level ->
-                        val isSelected = selectedDifficulty == level
-                        FilterChip(
-                            selected = isSelected,
-                            onClick = { onDifficultyChange(level) },
-                            label = {
-                                Text(
-                                    text = level.name,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                )
-                            },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = brandColor.copy(alpha = 0.15f),
-                                selectedLabelColor = brandColor,
-                                selectedLeadingIconColor = brandColor,
-                                containerColor = Color.Transparent,
-                                labelColor = brandColor.copy(alpha = 0.5f)
-                            ),
-                            border = FilterChipDefaults.filterChipBorder(
-                                enabled = true,
-                                selected = isSelected,
-                                borderColor = brandColor.copy(alpha = 0.25f),
-                                selectedBorderColor = brandColor,
-                                borderWidth = 1.dp,
-                                selectedBorderWidth = 1.5f.dp
-                            ),
-                            shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier.weight(1f)
-                        )
+                NovaWhiteToggle(
+                    options = listOf("Easy", "Medium", "Hard"),
+                    selectedIndex = selectedDifficulty.ordinal,
+                    onToggle = { index ->
+                        onDifficultyChange(Difficulty.entries[index])
                     }
-                }
+                )
             }
 
             // Input: Length Slider Config
@@ -160,17 +127,17 @@ fun CreatePasswordScreen(
                         color = brandColor
                     )
                 }
-                Slider(
-                    value = length,
-                    onValueChange = onLengthChange,
-                    valueRange = 6f..64f, // Adjusted range parameters for practical real-world usage
-                    colors = SliderDefaults.colors(
-                        thumbColor = brandColor,
-                        activeTrackColor = brandColor,
-                        inactiveTrackColor = brandColor.copy(alpha = 0.2f)
-                    ),
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
+                NovaWhiteCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    NovaWhiteSlider(
+                        value = length,
+                        onValueChange = onLengthChange,
+                        valueRange = 6f..64f
+                    )
+
+                }
             }
 
             // Primary Generation Action
