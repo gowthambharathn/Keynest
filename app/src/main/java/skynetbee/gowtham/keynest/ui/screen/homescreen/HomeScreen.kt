@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.homescreen
+package skynetbee.gowtham.keynest.ui.screen.homescreen
 
 /**
  * Created by Gowtham Barath
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
-import skynetbee.gowtham.keynest.auth.setup.AuthCard
+import skynetbee.gowtham.keynest.ui.screen.setup.AuthCard
 
 @Composable
 fun HomeScreen(

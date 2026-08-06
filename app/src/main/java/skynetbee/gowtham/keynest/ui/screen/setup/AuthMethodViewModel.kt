@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.setup
+package skynetbee.gowtham.keynest.ui.screen.setup
 
 
 /**

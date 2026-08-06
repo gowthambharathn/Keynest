@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.splash
+package skynetbee.gowtham.keynest.ui.screen.splash
 
 /**
  * Created by Gowtham Barath
