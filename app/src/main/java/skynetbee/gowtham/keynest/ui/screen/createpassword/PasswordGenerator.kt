@@ -1,11 +1,11 @@
-package skynetbee.gowtham.keynest.auth.createpassword
+package skynetbee.gowtham.keynest.ui.screen.createpassword
+
+import java.security.SecureRandom
 
 /**
  * Created by Gowtham Barath
  * Date: 05-07-2026
  */
-
-import java.security.SecureRandom
 
 object PasswordGenerator {
 

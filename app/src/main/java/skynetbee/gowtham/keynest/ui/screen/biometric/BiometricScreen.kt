@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.biometric
+package skynetbee.gowtham.keynest.ui.screen.biometric
 
 /**
  * Created by Gowtham Barath

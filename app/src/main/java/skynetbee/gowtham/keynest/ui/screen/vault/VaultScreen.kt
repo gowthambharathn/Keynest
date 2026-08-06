@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.vault
+package skynetbee.gowtham.keynest.ui.screen.vault
 
 /**
  * Created by Gowtham Barath
@@ -6,9 +6,6 @@ package skynetbee.gowtham.keynest.auth.vault
  * Enhanced Vault UI Implementation
  */
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

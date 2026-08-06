@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.createpassword
+package skynetbee.gowtham.keynest.ui.screen.createpassword
 
 /**
  * Created by Gowtham Barath

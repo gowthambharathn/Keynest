@@ -1,5 +1,4 @@
-package skynetbee.gowtham.keynest.auth.vault
-
+package skynetbee.gowtham.keynest.ui.screen.vault
 
 /**
  * Created by Gowtham Barath

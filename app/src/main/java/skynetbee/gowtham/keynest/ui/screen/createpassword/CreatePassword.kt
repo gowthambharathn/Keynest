@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.createpassword
+package skynetbee.gowtham.keynest.ui.screen.createpassword
 
 /**
  * Created by Gowtham Barath
@@ -7,7 +7,6 @@ package skynetbee.gowtham.keynest.auth.createpassword
  */
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape

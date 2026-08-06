@@ -1,4 +1,4 @@
-package skynetbee.gowtham.keynest.auth.password
+package skynetbee.gowtham.keynest.ui.screen.logincreatepassword
 
 /**
  * Created by Gowtham Barath
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
 import infinity.developers.coreutils.Ui.Nova.Components.Button.NovaWhiteButton
 import infinity.developers.coreutils.Ui.Nova.Components.TextField.NovaWhiteTextField
+import skynetbee.gowtham.keynest.ui.screen.passwordlogin.PasswordViewModel
 
 private const val TAG = "CreatePasswordScreen"
 

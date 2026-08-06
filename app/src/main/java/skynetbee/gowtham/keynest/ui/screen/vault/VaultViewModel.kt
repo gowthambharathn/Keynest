@@ -1,13 +1,6 @@
-package skynetbee.gowtham.keynest.auth.vault
+package skynetbee.gowtham.keynest.ui.screen.vault
 
-/**
- * Created by Gowtham Barath
- * Date: 05-07-2026
- */
-
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +9,12 @@ import kotlinx.coroutines.launch
 import skynetbee.gowtham.keynest.domain.usecase.DeletePasswordUseCase
 import skynetbee.gowtham.keynest.domain.usecase.GetPasswordsUseCase
 import javax.inject.Inject
+import androidx.compose.runtime.*
+
+/**
+ * Created by Gowtham Barath
+ * Date: 05-07-2026
+ */
 
 @HiltViewModel
 class VaultViewModel @Inject constructor(

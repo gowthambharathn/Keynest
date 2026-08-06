@@ -13,16 +13,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import skynetbee.gowtham.keynest.auth.biometric.BiometricScreen
-import skynetbee.gowtham.keynest.auth.createpassword.CreatePasswordScreen
-import skynetbee.gowtham.keynest.auth.createpassword.CreatePasswordViewModel
+import skynetbee.gowtham.keynest.ui.screen.biometric.BiometricScreen
+import skynetbee.gowtham.keynest.ui.screen.createpassword.CreatePasswordScreen
+import skynetbee.gowtham.keynest.ui.screen.logincreatepassword.CreatePasswordViewModel
 import skynetbee.gowtham.keynest.ui.screen.homescreen.HomeScreen
-import skynetbee.gowtham.keynest.auth.password.CreatePasswordScreen
-import skynetbee.gowtham.keynest.auth.password.PasswordLoginScreen
+import skynetbee.gowtham.keynest.ui.screen.logincreatepassword.CreatePasswordScreen
+import skynetbee.gowtham.keynest.ui.screen.passwordlogin.PasswordLoginScreen
 import skynetbee.gowtham.keynest.ui.screen.setup.AuthMethodScreen
 import skynetbee.gowtham.keynest.ui.screen.splash.SplashScreen
-import skynetbee.gowtham.keynest.auth.vault.VaultScreen
-import skynetbee.gowtham.keynest.auth.vault.VaultViewModel
+import skynetbee.gowtham.keynest.ui.screen.vault.VaultScreen
+import skynetbee.gowtham.keynest.ui.screen.vault.VaultViewModel
 
 @Composable
 fun NavGraph(
