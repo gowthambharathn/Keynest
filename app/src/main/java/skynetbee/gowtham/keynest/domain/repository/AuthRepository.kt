@@ -6,6 +6,7 @@ package skynetbee.gowtham.keynest.domain.repository
  * Date: 23-06-2026
  */
 import kotlinx.coroutines.flow.Flow
+import skynetbee.gowtham.keynest.domain.model.AuthMethod
 
 interface AuthRepository {
 

@@ -1,91 +1,69 @@
 package skynetbee.gowtham.keynest.ui.screen.logincreatepassword
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import skynetbee.gowtham.keynest.ui.screen.createpassword.CreatePasswordUiState
-import skynetbee.gowtham.keynest.ui.screen.createpassword.Difficulty
-import skynetbee.gowtham.keynest.ui.screen.createpassword.PasswordGenerator
-import skynetbee.gowtham.keynest.data.security.CryptoManager
-import skynetbee.gowtham.keynest.domain.model.Password
-import skynetbee.gowtham.keynest.domain.usecase.SavePasswordUseCase
+import skynetbee.gowtham.keynest.domain.model.AuthMethod
+import skynetbee.gowtham.keynest.domain.repository.AuthRepository
+import java.security.MessageDigest
 import javax.inject.Inject
-import androidx.compose.runtime.*
+
 /**
  * Created by Gowtham Barath
- * Date: 05-07-2026
+ * Date: 23-06-2026
  */
 
 @HiltViewModel
 class CreatePasswordViewModel @Inject constructor(
-    private val cryptoManager: CryptoManager,
-    private val savePasswordUseCase: SavePasswordUseCase
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(
-        CreatePasswordUiState()
-    )
-        private set
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated.asStateFlow()
 
-    fun onTitleChanged(title: String) {
-        uiState = uiState.copy(title = title)
-    }
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    fun onDifficultyChanged(
-        difficulty: Difficulty
-    ) {
-        uiState = uiState.copy(
-            difficulty = difficulty
-        )
-    }
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    fun onLengthChanged(
-        length: Float
-    ) {
-        uiState = uiState.copy(
-            length = length
-        )
-    }
-
-    fun generatePassword() {
-
-        val password = PasswordGenerator.generate(
-            length = uiState.length.toInt(),
-            difficulty = uiState.difficulty
-        )
-
-        uiState = uiState.copy(
-            generatedPassword = password
-        )
-    }
-
-    fun savePassword() {
-
-        if (uiState.title.isBlank()) return
-        if (uiState.generatedPassword.isBlank()) return
-
-        viewModelScope.launch {
-
-            val (encryptedPassword, iv) =
-                cryptoManager.encrypt(
-                    uiState.generatedPassword
-                )
-
-            val password = Password(
-                title = uiState.title,
-                encryptedPassword = encryptedPassword,
-                iv = iv
-            )
-
-            savePasswordUseCase(password)
-
-            uiState = CreatePasswordUiState()
-
+    fun createPassword(password: String) {
+        if (password.isBlank()) {
+            _errorMessage.value = "Password cannot be empty"
+            return
         }
 
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+
+            try {
+                // Secure SHA-256 password hashing
+                val passwordHash = hashPassword(password)
+
+                authRepository.savePasswordHash(passwordHash)
+                authRepository.saveAuthMethod(AuthMethod.PASSWORD)
+
+                _isAuthenticated.value = true
+            } catch (e: Exception) {
+                _errorMessage.value = e.message ?: "Failed to create password"
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
+
+    private fun hashPassword(password: String): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        val bytes = digest.digest(password.toByteArray(Charsets.UTF_8))
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
 }

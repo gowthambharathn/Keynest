@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
-import skynetbee.gowtham.keynest.ui.screen.setup.AuthCard
+import skynetbee.gowtham.keynest.Utils.Components.Card.AuthCard
 
 private const val TAG = "BiometricScreen"
 

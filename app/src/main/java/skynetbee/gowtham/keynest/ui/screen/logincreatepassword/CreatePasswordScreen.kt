@@ -1,10 +1,5 @@
 package skynetbee.gowtham.keynest.ui.screen.logincreatepassword
 
-/**
- * Created by Gowtham Barath
- * Date: 23-06-2026
- */
-
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -31,13 +26,12 @@ import androidx.compose.ui.unit.dp
 import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
 import infinity.developers.coreutils.Ui.Nova.Components.Button.NovaWhiteButton
 import infinity.developers.coreutils.Ui.Nova.Components.TextField.NovaWhiteTextField
-import skynetbee.gowtham.keynest.ui.screen.passwordlogin.PasswordViewModel
 
 private const val TAG = "CreatePasswordScreen"
 
 @Composable
 fun CreatePasswordScreen(
-    viewModel: PasswordViewModel,
+    viewModel: CreatePasswordViewModel,
     onPasswordCreated: () -> Unit
 ) {
     Log.d(TAG, "CreatePasswordScreen Composed")
@@ -52,7 +46,7 @@ fun CreatePasswordScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Observe StateFlows from ViewModel
-    val isPasswordCreated by viewModel.isAuthenticated.collectAsState() // Adjust flow flag based on your VM setup
+    val isAuthenticated by viewModel.isAuthenticated.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
@@ -60,9 +54,9 @@ fun CreatePasswordScreen(
     val hasInputStarted = password.isNotEmpty() || confirmPassword.isNotEmpty()
     val showMismatchError = hasInputStarted && !passwordsMatch && confirmPassword.isNotEmpty()
 
-    // Handle single-execution success navigation safely
-    LaunchedEffect(isPasswordCreated) {
-        if (isPasswordCreated) {
+    // Handle single-execution success navigation
+    LaunchedEffect(isAuthenticated) {
+        if (isAuthenticated) {
             Log.d(TAG, "Password creation confirmed. Navigating...")
             onPasswordCreated()
         }
@@ -78,7 +72,7 @@ fun CreatePasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Top Branded Icon Surface matching design identity
+            // Top Branded Icon Surface
             Surface(
                 shape = CircleShape,
                 color = Color(0xFF03A9F4).copy(alpha = 0.12f),
@@ -114,7 +108,7 @@ fun CreatePasswordScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Primary Password Field using Nova Custom Design System
+            // Primary Password Field
             NovaWhiteTextField(
                 value = password,
                 onValueChange = {
@@ -142,7 +136,7 @@ fun CreatePasswordScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Confirmation Password Field using Nova Custom Design System
+            // Confirmation Password Field
             NovaWhiteTextField(
                 value = confirmPassword,
                 onValueChange = {

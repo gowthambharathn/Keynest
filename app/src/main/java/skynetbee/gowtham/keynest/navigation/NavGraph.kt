@@ -99,19 +99,8 @@ fun NavGraph(
             val viewModel: CreatePasswordViewModel = hiltViewModel()
 
             CreatePasswordScreen(
-                title = viewModel.uiState.title,
-                password = viewModel.uiState.generatedPassword,
-                length = viewModel.uiState.length,
-                selectedDifficulty = viewModel.uiState.difficulty,
-                onTitleChange = viewModel::onTitleChanged,
-                onDifficultyChange = viewModel::onDifficultyChanged,
-                onLengthChange = viewModel::onLengthChanged,
-                onGenerateClick = viewModel::generatePassword,
-                onCopyClick = {
-                    // Clipboard action
-                },
-                onSaveClick = {
-                    viewModel.savePassword()
+                viewModel = viewModel,
+                onPasswordCreated = {
                     navController.popBackStack()
                 }
             )
