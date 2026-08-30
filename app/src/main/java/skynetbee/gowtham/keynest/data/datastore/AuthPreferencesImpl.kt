@@ -13,7 +13,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import skynetbee.gowtham.keynest.domain.model.AuthMethod
 import javax.inject.Inject
 
 class AuthPreferencesImpl @Inject constructor(

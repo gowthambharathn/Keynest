@@ -33,16 +33,28 @@ class BiometricViewModel @Inject constructor(
         checkBiometricAvailability()
     }
 
+    /**
+     * Checks sensor availability and updates state.
+     * Starts in Idle or Unavailable to let the UI control prompt invocation.
+     */
     fun checkBiometricAvailability() {
-        if (biometricHelper.isBiometricAvailable()) {
-            _authState.value = BiometricAuthState.PromptReady
-        } else {
+        if (!biometricHelper.isBiometricAvailable()) {
             _authState.value = BiometricAuthState.Unavailable
+        } else if (_authState.value is BiometricAuthState.Unavailable) {
+            _authState.value = BiometricAuthState.Idle
         }
     }
 
     fun isBiometricAvailable(): Boolean {
         return biometricHelper.isBiometricAvailable()
+    }
+
+    fun triggerPrompt() {
+        if (isBiometricAvailable()) {
+            _authState.value = BiometricAuthState.PromptReady
+        } else {
+            _authState.value = BiometricAuthState.Unavailable
+        }
     }
 
     fun onAuthenticationSuccess() {
@@ -54,8 +66,6 @@ class BiometricViewModel @Inject constructor(
     }
 
     fun resetState() {
-        if (isBiometricAvailable()) {
-            _authState.value = BiometricAuthState.PromptReady
-        }
+        _authState.value = BiometricAuthState.Idle
     }
 }

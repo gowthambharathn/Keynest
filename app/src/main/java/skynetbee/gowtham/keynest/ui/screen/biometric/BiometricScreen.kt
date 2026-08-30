@@ -54,6 +54,7 @@ fun BiometricScreen(
 
         if (!viewModel.isBiometricAvailable()) {
             Log.e(TAG, "Biometric hardware not available or enrolled")
+            onFallbackToPassword()
             return
         }
 
@@ -75,6 +76,7 @@ fun BiometricScreen(
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
                     Log.w(TAG, "Authentication FAILED (Fingerprint not recognized)")
+                    // Keep prompt open for retry unless user explicitly cancels or chooses password
                 }
 
                 override fun onAuthenticationError(
@@ -83,7 +85,25 @@ fun BiometricScreen(
                 ) {
                     super.onAuthenticationError(errorCode, errString)
                     Log.e(TAG, "Authentication ERROR -> Code: $errorCode, Message: $errString")
-                    viewModel.onAuthenticationError(errString.toString())
+
+                    when (errorCode) {
+                        // Triggered when user clicks "Use Password" setNegativeButtonText
+                        BiometricPrompt.ERROR_NEGATIVE_BUTTON -> {
+                            Log.d(TAG, "User chose 'Use Password' fallback button")
+                            onFallbackToPassword()
+                        }
+                        // Triggered when biometric is locked out after too many failed attempts
+                        BiometricPrompt.ERROR_LOCKOUT,
+                        BiometricPrompt.ERROR_LOCKOUT_PERMANENT -> {
+                            Log.w(TAG, "Biometrics locked out. Forcing password fallback.")
+                            viewModel.onAuthenticationError(errString.toString())
+                            onFallbackToPassword()
+                        }
+                        // User canceled prompt or hardware failed
+                        else -> {
+                            viewModel.onAuthenticationError(errString.toString())
+                        }
+                    }
                 }
             }
         )
@@ -92,10 +112,20 @@ fun BiometricScreen(
             .setTitle("Unlock KeyNest")
             .setSubtitle("Use your fingerprint to log in")
             .setNegativeButtonText("Use Password")
+            .setConfirmationRequired(false)
             .build()
 
         Log.d(TAG, "Showing biometric prompt")
         biometricPrompt.authenticate(promptInfo)
+    }
+
+    // Automatically trigger prompt on screen launch if biometrics are available
+    LaunchedEffect(Unit) {
+        if (viewModel.isBiometricAvailable()) {
+            showBiometricPrompt()
+        } else {
+            onFallbackToPassword()
+        }
     }
 
     // React to Auth State updates
@@ -129,7 +159,6 @@ fun BiometricScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            // Header matching HomeScreen title styling
             Text(
                 text = "KeyNest",
                 style = MaterialTheme.typography.displayLarge,
@@ -139,7 +168,6 @@ fun BiometricScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Subtitle matching HomeScreen subtitle styling
             Text(
                 text = "Authenticate to unlock your vault",
                 style = MaterialTheme.typography.titleMedium,
@@ -148,7 +176,6 @@ fun BiometricScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Action section using AuthCard components
             if (viewModel.isBiometricAvailable()) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -169,7 +196,6 @@ fun BiometricScreen(
                     )
                 }
             } else {
-                // Single centered card if biometric sensor isn't available
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center

@@ -6,12 +6,15 @@ package skynetbee.gowtham.keynest.ui.screen.splash
  */
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import skynetbee.gowtham.keynest.domain.model.AuthMethod
+import infinity.developers.coreutils.Ui.Nova.Components.Background.NovaWhiteBackground
 
 private const val TAG = "SplashScreen"
 
@@ -20,52 +23,37 @@ fun SplashScreen(
     viewModel: SplashViewModel,
     navController: NavController
 ) {
+    val destination by viewModel.destination.collectAsState()
 
-    val authMethod by viewModel.authMethod.collectAsState()
+    Log.d(TAG, "Current SplashDestination: $destination")
 
-    Log.d(TAG, "Current authMethod: $authMethod")
-
-    LaunchedEffect(authMethod) {
-
-        Log.d(TAG, "LaunchedEffect triggered with authMethod = $authMethod")
-
-        when (authMethod) {
-
-            AuthMethod.NONE -> {
-                Log.d(TAG, "Navigating to auth_method")
-
-                navController.navigate("auth_method") {
-                    popUpTo("splash") {
-                        inclusive = true
-                    }
-                }
-
-                Log.d(TAG, "Navigation completed -> auth_method")
+    LaunchedEffect(destination) {
+        when (destination) {
+            SplashDestination.Loading -> {
+                Log.d(TAG, "Evaluating user state...")
             }
-
-            AuthMethod.PASSWORD -> {
-                Log.d(TAG, "Navigating to password_login")
-
-                navController.navigate("password_login") {
-                    popUpTo("splash") {
-                        inclusive = true
-                    }
+            SplashDestination.MasterPasswordSetup -> {
+                Log.d(TAG, "First time user -> Navigating to master_password_setup")
+                navController.navigate("master_password_setup") {
+                    popUpTo("splash") { inclusive = true }
                 }
-
-                Log.d(TAG, "Navigation completed -> password_login")
             }
-
-            AuthMethod.BIOMETRIC -> {
-                Log.d(TAG, "Navigating to biometric")
-
+            SplashDestination.BiometricLogin -> {
+                Log.d(TAG, "Returning user with Biometrics -> Navigating to biometric")
                 navController.navigate("biometric") {
-                    popUpTo("splash") {
-                        inclusive = true
-                    }
+                    popUpTo("splash") { inclusive = true }
                 }
-
-                Log.d(TAG, "Navigation completed -> biometric")
+            }
+            SplashDestination.PasswordLogin -> {
+                Log.d(TAG, "Returning user with Password -> Navigating to password_login")
+                navController.navigate("password_login") {
+                    popUpTo("splash") { inclusive = true }
+                }
             }
         }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        NovaWhiteBackground()
     }
 }

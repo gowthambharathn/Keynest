@@ -7,7 +7,6 @@ package skynetbee.gowtham.keynest.data.repository
  */
 import kotlinx.coroutines.flow.Flow
 import skynetbee.gowtham.keynest.data.datastore.AuthPreferences
-import skynetbee.gowtham.keynest.domain.model.AuthMethod
 import skynetbee.gowtham.keynest.domain.repository.AuthRepository
 import javax.inject.Inject
 

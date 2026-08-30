@@ -5,73 +5,40 @@ package skynetbee.gowtham.keynest.ui.screen.splash
  * Date: 23-06-2026
  */
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import skynetbee.gowtham.keynest.domain.model.AuthMethod
-import skynetbee.gowtham.keynest.domain.usecase.GetAuthMethodUseCase
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import skynetbee.gowtham.keynest.data.preference.AuthPreferences
 import javax.inject.Inject
+
+sealed interface SplashDestination {
+    object Loading : SplashDestination
+    object MasterPasswordSetup : SplashDestination
+    object BiometricLogin : SplashDestination
+    object PasswordLogin : SplashDestination
+}
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val getAuthMethodUseCase: GetAuthMethodUseCase
+    authPreferences: AuthPreferences
 ) : ViewModel() {
 
-    companion object {
-        private const val TAG = "SplashViewModel"
-    }
-
-    private val _authMethod =
-        MutableStateFlow(AuthMethod.NONE)
-
-    val authMethod: StateFlow<AuthMethod> =
-        _authMethod.asStateFlow()
-
-    init {
-        Log.d(TAG, "ViewModel initialized")
-        loadAuthMethod()
-    }
-
-    private fun loadAuthMethod() {
-        Log.d(TAG, "loadAuthMethod() called")
-
-        viewModelScope.launch {
-            try {
-                Log.d(TAG, "Starting auth method collection")
-
-                getAuthMethodUseCase().collect { method ->
-
-                    Log.d(
-                        TAG,
-                        "Received AuthMethod from UseCase: $method"
-                    )
-
-                    _authMethod.value = method
-
-                    Log.d(
-                        TAG,
-                        "StateFlow updated: ${_authMethod.value}"
-                    )
-                }
-
-            } catch (e: Exception) {
-
-                Log.e(
-                    TAG,
-                    "Error while loading auth method",
-                    e
-                )
-            }
+    val destination: StateFlow<SplashDestination> = combine(
+        authPreferences.isMasterPasswordSet,
+        authPreferences.isBiometricEnabled
+    ) { isPasswordSet, isBiometricEnabled ->
+        when {
+            !isPasswordSet -> SplashDestination.MasterPasswordSetup
+            isBiometricEnabled -> SplashDestination.BiometricLogin
+            else -> SplashDestination.PasswordLogin
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG, "ViewModel cleared")
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = SplashDestination.Loading
+    )
 }

@@ -7,7 +7,6 @@ package skynetbee.gowtham.keynest.data.datastore
  */
 
 import kotlinx.coroutines.flow.Flow
-import skynetbee.gowtham.keynest.domain.model.AuthMethod
 
 interface AuthPreferences {
 
