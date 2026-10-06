@@ -32,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,7 +63,8 @@ private val ErrorRedColor = Color(0xFFFF5252)
 @Composable
 fun UnlockVaultScreen(
     viewModel: UnlockVaultViewModel = viewModel(),
-    onUnlocked: () -> Unit
+    onUnlocked: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -212,7 +214,28 @@ fun UnlockVaultScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                // Forgot Password Action link displayed when error occurs
+                AnimatedVisibility(
+                    visible = uiState.errorMessage != null,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        TextButton(onClick = onForgotPasswordClick) {
+                            Text(
+                                text = "Forgot Password?",
+                                color = TestAccentColor,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
 
                 NovaButton(
                     text = "Unlock Vault",

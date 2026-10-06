@@ -1,6 +1,7 @@
 package skynetbee.gowtham.keynest.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import skynetbee.gowtham.keynest.Screen.CreateMasterPasswordScreen
 import skynetbee.gowtham.keynest.Screen.addpassword.AddPasswordScreen
+import skynetbee.gowtham.keynest.Screen.forgotpassword.ForgotPasswordScreen
 import skynetbee.gowtham.keynest.Screen.homescreen.HomeScreen
 import skynetbee.gowtham.keynest.Screen.settings.AboutAppScreen
 import skynetbee.gowtham.keynest.Screen.settings.AboutDeveloperScreen
@@ -42,6 +44,10 @@ fun KeyNestNavigation(
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.UnlockVault.route) { inclusive = true }
                     }
+                },
+                viewModel = viewModel(), // Automatically scopes to the current NavBackStackEntry / Composable lifecycle
+                onForgotPasswordClick = {
+                    navController.navigate(Screen.ForgotPassword.route)
                 }
             )
         }
@@ -106,6 +112,19 @@ fun KeyNestNavigation(
         composable(route = Screen.PrivacyPolicy.route) {
             PrivacyPolicyScreen(
                 navController = navController
+            )
+        }
+        composable(route = Screen.ForgotPassword.route) {
+            ForgotPasswordScreen(
+                viewModel = viewModel(),
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToCreateMasterPassword = {
+                    navController.navigate(Screen.SetupMasterPassword.route) {
+                        popUpTo(0) { inclusive = true } // Clears entire backstack so user cannot back-navigate to old vault screens
+                    }
+                }
             )
         }
     }

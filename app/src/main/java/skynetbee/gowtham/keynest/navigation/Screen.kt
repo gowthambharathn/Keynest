@@ -10,6 +10,8 @@ sealed class Screen(val route: String) {
     object AboutDeveloper: Screen("about_developer_screen")
     object Howtouse: Screen("howtouse_screen")
     object PrivacyPolicy: Screen("privacypolicy_screen")
+
+    object ForgotPassword: Screen("forgotpassword")
     object addpassword : Screen("add_password")
     object AddEditPassword : Screen("add_edit_password?passwordId={passwordId}") {
         fun createRoute(passwordId: String? = null): String {

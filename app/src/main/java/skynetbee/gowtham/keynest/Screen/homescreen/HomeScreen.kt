@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
@@ -38,6 +39,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -45,16 +47,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
 import infinity.developers.coreutils.Ui.Nova.Components.NovaTextField
-import infinity.developers.coreutils.Ui.Nova.Components.NovaToggle
+import skynetbee.gowtham.keynest.Utils.titleColor
 import skynetbee.gowtham.keynest.data.local.PasswordEntity
-
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 private val TestAccentColor = Color(0xFF2196F3)
-
+private val WarningAmberColor = Color(0xFFFFB300)
+private val ErrorRedColor = Color(0xFFEF5350)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
@@ -105,7 +114,7 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "KeyNest",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -126,7 +135,7 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = "Settings",
-                                tint = Color.White,
+                                tint = titleColor(),
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -134,11 +143,11 @@ fun HomeScreen(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Search Bar
                 NovaTextField(
                     value = uiState.searchQuery,
                     onValueChange = { viewModel.onSearchQueryChanged(it) },
                     hint = "Search accounts...",
+
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -146,6 +155,30 @@ fun HomeScreen(
                             tint = TestAccentColor
                         )
                     },
+
+                    trailingIcon = {
+                        Box(
+                            modifier = Modifier.size(35.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    viewModel.onSearchQueryChanged("")
+                                },
+                                enabled = uiState.searchQuery.isNotEmpty()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Clear search",
+                                    tint = TestAccentColor,
+                                    modifier = Modifier.alpha(
+                                        if (uiState.searchQuery.isNotEmpty()) 1f else 0f
+                                    )
+                                )
+                            }
+                        }
+                    },
+
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -216,6 +249,8 @@ private fun PasswordItemCard(
     onFavoriteClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     NovaCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -227,7 +262,11 @@ private fun PasswordItemCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                // Title & Icon section given weight(1f) to truncate smoothly when long
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -245,27 +284,34 @@ private fun PasswordItemCard(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = item.title,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = item.category,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
 
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Action buttons
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onFavoriteClick) {
                         Icon(
                             imageVector = if (item.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
                             contentDescription = "Favorite",
-                            tint = if (item.isFavorite) Color(0xFFFFB300) else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = if (item.isFavorite) WarningAmberColor else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -277,7 +323,7 @@ private fun PasswordItemCard(
                         )
                     }
 
-                    IconButton(onClick = onDeleteClick) {
+                    IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete",
@@ -295,6 +341,95 @@ private fun PasswordItemCard(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+            }
+        }
+    }
+
+    // Modal Confirmation Dialog built with NovaCard
+    if (showDeleteDialog) {
+        Dialog(
+            onDismissRequest = { showDeleteDialog = false },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            NovaCard(
+                modifier = Modifier
+                    .fillMaxWidth(0.92f)
+                    .clip(RoundedCornerShape(20.dp))
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp)
+                ) {
+                    // Header with warning icon
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Warning,
+                            contentDescription = "Warning",
+                            tint = ErrorRedColor,
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = "Delete Password?",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Warning description
+                    Text(
+                        text = "Are you sure you want to delete \"${item.title}\"? This item cannot be recovered once removed.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.88f),
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Action Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(
+                            onClick = { showDeleteDialog = false }
+                        ) {
+                            Text(
+                                text = "Cancel",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        TextButton(
+                            onClick = {
+                                showDeleteDialog = false
+                                onDeleteClick()
+                            }
+                        ) {
+                            Text(
+                                text = "Delete",
+                                color = ErrorRedColor,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                }
             }
         }
     }

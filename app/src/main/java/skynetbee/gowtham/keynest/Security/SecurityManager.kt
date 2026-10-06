@@ -1,12 +1,11 @@
 package skynetbee.gowtham.keynest.Security
 
-
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.security.MessageDigest
 
-class SecurityManager(context: Context) {
+class SecurityManager(private val context: Context) {
 
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -23,6 +22,7 @@ class SecurityManager(context: Context) {
     companion object {
         private const val KEY_MASTER_PASSWORD_HASH = "master_password_hash"
         private const val KEY_IS_VAULT_CREATED = "is_vault_created"
+        private const val DATABASE_NAME = "keynest_vault.db" // Update with your actual Room/SQLCipher DB name if different
     }
 
     fun isMasterPasswordSet(): Boolean {
@@ -40,6 +40,17 @@ class SecurityManager(context: Context) {
     fun verifyMasterPassword(password: String): Boolean {
         val savedHash = prefs.getString(KEY_MASTER_PASSWORD_HASH, null) ?: return false
         return savedHash == hashPassword(password)
+    }
+
+    /**
+     * Completely wipes all encrypted preferences and deletes local vault database files.
+     */
+    fun clearAllData() {
+        // 1. Clear EncryptedSharedPreferences
+        prefs.edit().clear().apply()
+
+        // 2. Delete local SQLite/SQLCipher database files
+        context.deleteDatabase(DATABASE_NAME)
     }
 
     private fun hashPassword(password: String): String {

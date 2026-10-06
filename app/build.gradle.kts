@@ -56,7 +56,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     //Lib
-    implementation("com.github.gowthambharathn:Orbit:1.0.2")
+    implementation("com.github.gowthambharathn:Orbit:1.0.3")
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
