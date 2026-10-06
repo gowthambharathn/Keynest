@@ -54,6 +54,7 @@ import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
 import skynetbee.gowtham.keynest.R
+import skynetbee.gowtham.keynest.Utils.titleColor
 
 private val TestAccentColor = Color(0xFF2196F3)
 
@@ -71,7 +72,7 @@ fun AboutDeveloperScreen(
                     title = {
                         Text(
                             text = "About Developer",
-                            color = Color.White,
+                            color = titleColor(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
                         )
@@ -81,7 +82,7 @@ fun AboutDeveloperScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White
+                                tint = titleColor()
                             )
                         }
                     },
@@ -124,7 +125,7 @@ fun AboutDeveloperScreen(
 
                         Text(
                             text = "Gowtham Barath",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -225,7 +226,7 @@ fun AboutDeveloperScreen(
 
                             Text(
                                 text = "Support & Connect",
-                                color = Color.White,
+                                color = titleColor(),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -286,7 +287,7 @@ private fun DeveloperFeatureCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    color = Color.White,
+                    color = titleColor(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -324,7 +325,7 @@ private fun DeveloperInfoRow(
 
         Text(
             text = value,
-            color = Color.White,
+            color = titleColor(),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )

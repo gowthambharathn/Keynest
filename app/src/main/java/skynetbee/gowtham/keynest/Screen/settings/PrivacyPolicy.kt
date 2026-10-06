@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
+import skynetbee.gowtham.keynest.Utils.titleColor
 
 private val TestAccentColor = Color(0xFF2196F3)
 
@@ -51,7 +52,7 @@ fun PrivacyPolicyScreen(
                     title = {
                         Text(
                             text = "Privacy Policy",
-                            color = Color.White,
+                            color = titleColor(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
                         )
@@ -61,7 +62,7 @@ fun PrivacyPolicyScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White
+                                tint = titleColor()
                             )
                         }
                     },
@@ -92,7 +93,7 @@ fun PrivacyPolicyScreen(
                     ) {
                         Text(
                             text = "KeyNest Privacy Policy",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )

@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
+import skynetbee.gowtham.keynest.Utils.titleColor
 
 private val TestAccentColor = Color(0xFF2196F3)
 
@@ -64,51 +65,30 @@ fun SettingsScreen(
     navController: NavController,
     onLockVaultClick: () -> Unit = {}
 ) {
-    val securityOptions = listOf(
-        SettingItemModel(
-            title = "Lock Vault",
-            subtitle = "Immediately lock your encrypted vault",
-            icon = Icons.Default.Lock,
-            route = "lock_vault"
-        ),
-        SettingItemModel(
-            title = "Security & Encryption",
-            subtitle = "AES-256 & Android KeyStore configuration",
-            icon = Icons.Default.Security,
-            route = "security_settings"
-        )
-    )
-
     val aboutOptions = listOf(
         SettingItemModel(
             title = "Privacy Policy",
             subtitle = "Learn how your local data is protected",
             icon = Icons.Default.PrivacyTip,
-            route = "privacypolicy"
+            route = "privacypolicy_screen"
         ),
         SettingItemModel(
             title = "About KeyNest",
             subtitle = "App version and repository info",
             icon = Icons.Default.Info,
-            route = "aboutapp"
+            route = "aboutapp_screen"
         ),
         SettingItemModel(
             title = "About Developer",
             subtitle = "Skynetbee / Gowtham Barath",
             icon = Icons.Default.Person,
-            route = "aboutdeveloper"
-        ),
-        SettingItemModel(
-            title = "Notifications",
-            subtitle = "Security alerts & sync status",
-            icon = Icons.Default.Notifications,
-            route = "notification"
+            route = "about_developer_screen"
         ),
         SettingItemModel(
             title = "How to Use",
             subtitle = "Guide on managing vault records",
             icon = Icons.Default.HelpOutline,
-            route = "howtouse"
+            route = "howtouse_screen"
         )
     )
 
@@ -119,7 +99,7 @@ fun SettingsScreen(
                     title = {
                         Text(
                             text = "Settings",
-                            color = Color.White,
+                            color = titleColor(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
                         )
@@ -129,7 +109,7 @@ fun SettingsScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White
+                                tint = titleColor()
                             )
                         }
                     },
@@ -149,25 +129,6 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
-                // Vault Security Section
-                SectionHeader(title = "Vault Security")
-                securityOptions.forEach { option ->
-                    SettingCardItem(
-                        item = option,
-                        onClick = {
-                            if (option.route == "lock_vault") {
-                                onLockVaultClick()
-                            } else {
-                                navController.navigate(option.route)
-                            }
-                        }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Information & About Section
-                SectionHeader(title = "About & Information")
                 aboutOptions.forEach { option ->
                     SettingCardItem(
                         item = option,
@@ -258,7 +219,7 @@ private fun SettingCardItem(
                         text = item.title,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White
+                        color = titleColor()
                     )
                     item.subtitle?.let {
                         Text(

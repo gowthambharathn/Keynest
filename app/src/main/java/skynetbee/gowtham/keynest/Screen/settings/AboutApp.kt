@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
+import skynetbee.gowtham.keynest.Utils.titleColor
 
 private val TestAccentColor = Color(0xFF2196F3)
 
@@ -63,7 +64,7 @@ fun AboutAppScreen(
                     title = {
                         Text(
                             text = "About App",
-                            color = Color.White,
+                            color = titleColor(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
                         )
@@ -73,7 +74,7 @@ fun AboutAppScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White
+                                tint = titleColor()
                             )
                         }
                     },
@@ -122,7 +123,7 @@ fun AboutAppScreen(
 
                         Text(
                             text = "KeyNest",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -208,7 +209,7 @@ fun AboutAppScreen(
                     ) {
                         Text(
                             text = "Thank You For Using KeyNest",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -265,7 +266,7 @@ private fun FeatureCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    color = Color.White,
+                    color = titleColor(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -303,7 +304,7 @@ private fun AppInfoRow(
 
         Text(
             text = value,
-            color = Color.White,
+            color = titleColor(),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
         )

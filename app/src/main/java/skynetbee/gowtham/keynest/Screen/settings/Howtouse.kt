@@ -48,6 +48,7 @@ import androidx.navigation.NavHostController
 import infinity.developers.coreutils.Ui.Nova.Components.GlowPosition
 import infinity.developers.coreutils.Ui.Nova.Components.NovaBackground
 import infinity.developers.coreutils.Ui.Nova.Components.NovaCard
+import skynetbee.gowtham.keynest.Utils.titleColor
 
 private val TestAccentColor = Color(0xFF2196F3)
 
@@ -97,7 +98,7 @@ fun HowToUseScreen(
                     title = {
                         Text(
                             text = "How to Use KeyNest",
-                            color = Color.White,
+                            color = titleColor(),
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp
                         )
@@ -107,7 +108,7 @@ fun HowToUseScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
-                                tint = Color.White
+                                tint = titleColor()
                             )
                         }
                     },
@@ -136,7 +137,7 @@ fun HowToUseScreen(
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
                             text = "Welcome to KeyNest Vault",
-                            color = Color.White,
+                            color = titleColor(),
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -196,7 +197,7 @@ private fun StepGuideCard(step: KeyNestGuideStep) {
 
                     Text(
                         text = step.title,
-                        color = Color.White,
+                        color = titleColor(),
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold
                     )

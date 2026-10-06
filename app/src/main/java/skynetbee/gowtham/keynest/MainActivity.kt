@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // EngineStarter checks secure storage and routes to the correct initial screen
                     EngineStarter()
                 }
             }
