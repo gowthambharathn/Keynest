@@ -99,9 +99,27 @@ class AddPasswordViewModel(application: Application) : AndroidViewModel(applicat
 
             try {
                 val selectedCategory = categories.getOrElse(state.selectedCategoryIndex) { "Personal" }
+                val trimmedTitle = state.title.trim()
 
+                // 1. Check if record already exists in local database
+                val isDuplicate = passwordDao.isDuplicatePassword(
+                    title = trimmedTitle,
+                    encryptedPassword = state.password
+                )
+
+                if (isDuplicate) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = "This password record is already saved in your vault."
+                        )
+                    }
+                    return@launch
+                }
+
+                // 2. Insert if it does not exist
                 val newEntry = PasswordEntity(
-                    title = state.title.trim(),
+                    title = trimmedTitle,
                     encryptedPassword = state.password,
                     category = selectedCategory,
                     isFavorite = false,

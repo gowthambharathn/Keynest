@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -70,6 +71,7 @@ fun AddPasswordScreen(
     onSaveSuccess: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState() // Ensure scrollState is remembered
 
     LaunchedEffect(uiState.isSavedSuccess) {
         if (uiState.isSavedSuccess) {
@@ -77,16 +79,24 @@ fun AddPasswordScreen(
         }
     }
 
+    // Auto-scroll to top when a duplicate or error message occurs
+    LaunchedEffect(uiState.errorMessage) {
+        if (uiState.errorMessage != null) {
+            scrollState.animateScrollTo(0)
+        }
+    }
+
     NovaBackground(position = GlowPosition.TOP_RIGHT) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .imePadding() // <--- Prevents keyboard from overlapping bottom content
                 .padding(horizontal = 20.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -165,7 +175,6 @@ fun AddPasswordScreen(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f))
                                 .padding(12.dp)
                         ) {
                             Icon(
@@ -286,9 +295,7 @@ fun AddPasswordScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ================= Password Generator (NEW) =================
-
-                // 1) Generator strength selector + Generate button
+                // Password Generator
                 Text(
                     text = "Generate Password",
                     style = MaterialTheme.typography.labelSmall,
@@ -309,7 +316,7 @@ fun AddPasswordScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // 2) Generated password result card with regenerate icon
+                // Generated password result card
                 AnimatedVisibility(
                     visible = uiState.showGeneratedPasswordCard,
                     enter = fadeIn(),
@@ -352,8 +359,6 @@ fun AddPasswordScreen(
                         }
                     }
                 }
-
-                // ================= End Password Generator =================
 
                 Spacer(modifier = Modifier.height(28.dp))
 

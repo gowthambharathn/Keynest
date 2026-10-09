@@ -39,4 +39,17 @@ interface PasswordDao {
 
     @Query("SELECT * FROM passwords WHERE id = :id LIMIT 1")
     suspend fun getPasswordById(id: Long): PasswordEntity?
+
+    // Check if an entry with the same title and password already exists
+    @Query("""
+        SELECT EXISTS(
+            SELECT 1 FROM passwords 
+            WHERE title = :title 
+            AND encryptedPassword = :encryptedPassword
+        )
+    """)
+    suspend fun isDuplicatePassword(
+        title: String,
+        encryptedPassword: String
+    ): Boolean
 }
